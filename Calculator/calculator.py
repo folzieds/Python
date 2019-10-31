@@ -4,6 +4,9 @@
 
 # A basic calculator
 import re
+import logging
+
+logging.basicConfig(filename='cal.log', level=logging.DEBUG)
 
 
 print("Basic Calculator!!")
@@ -25,11 +28,16 @@ def calculate():
     if equation == "quit":
         run = False
     else:
-        equation = re.sub('[a-zA-Z().,{};:" "]','',equation)
-        if previous == 0:
-            previous = eval(equation)
-        else:
-            previous = eval(f"{previous} {equation}")
+        try:
+            equation = re.sub('[a-zA-Z().,{};:" "]','',equation)
+            if previous == 0:
+                previous = eval(equation)
+            else:
+                previous = eval(f"{previous} {equation}")
+        except Exception as error:
+            print("You have entered an invalid value")
+            logging.ERROR(error)
+
 
 
 while run:
