@@ -1,13 +1,20 @@
 from classes.Game import Person, Bcolors
+from classes.Magic import Spell
 
+# Black Magic
+fire = Spell("Fire", 5, 100, "black")
+thunder = Spell("Thunder", 10, 150, "black")
+blizzard = Spell("Blizzard", 5, 100, "black")
+meteor = Spell("Meteor", 15, 200, "black")
+quake = Spell("Quake", 13, 170, "black")
 
-magic = [{"name": "Fire", "damage": 100, "cost": 5},
-         {"name": "Thunder", "damage": 150, "cost": 10},
-         {"name": "Blizzard", "damage": 100, "cost": 5}]
+# White Magic
+cure = Spell("Cure", 15, 150, "white")
+cura = Spell("Cura", 20, 250, "white")
 
-
-player = Person(500,65,34,60,magic)
-enemy = Person(1200,65,45,25,magic)
+# Instantiate Characters
+player = Person(500,65,34,60,[fire, thunder, blizzard, meteor, cure, cura])
+enemy = Person(1200,65,45,25,[])
 
 running = True
 
@@ -33,23 +40,23 @@ while running:
         
         magic_choice = int(input("Choose magic: ")) - 1
 
-        #get the details of the spell
-        spell_name = player.get_spell_name(magic_choice)
-        spell_cost = player.get_spell_mp_cost(magic_choice)
+        #create a variable to store the choice of the magic selected
+        spell = player.magic[magic_choice]
 
         current_mp = player.get_mp()
 
         # skip reduction of mp if the player's mp is below the cost
-        if spell_cost > current_mp:
+        if spell.cost > current_mp:
             print(f"{Bcolors.BOLD}{Bcolors.FAIL}\nNOT ENOUGH MP!!{Bcolors.ENDC}")
             continue
         else:
-            player.reduce_mp(spell_cost)
-        
-            player_magic_damage = player.generate_spell_damage(magic_choice)
+            player.reduce_mp(spell.cost)
+
+            # Generates the damage and saves it in a variable
+            player_magic_damage = spell.generate_damage()
             enemy.take_damage(player_magic_damage)
 
-        print(f"{Bcolors.OKBLUE}{Bcolors.BOLD}{spell_name}  deals {player_magic_damage} points.{Bcolors.ENDC}")
+        print(f"{Bcolors.OKBLUE}{Bcolors.BOLD}{spell.name}  deals {player_magic_damage} points.{Bcolors.ENDC}")
 
     # Enemy attacks you
     enemy_choice = 1

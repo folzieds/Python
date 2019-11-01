@@ -18,7 +18,6 @@ class Person:
         self.max_mp = mp
         self.mp = mp
         self.defense = df
-        self.magic = magic
         self.high_attack = attack + 10
         self.low_attack = attack - 10
         self.magic = magic
@@ -27,12 +26,6 @@ class Person:
     def generate_damage(self):
         return random.randrange(self.low_attack, self.high_attack)
 
-    def generate_spell_damage(self,index):
-        magic_low = self.magic[index]["damage"] - 5
-        magic_high = self.magic[index]["damage"] + 5
-        
-        return random.randint(magic_low,magic_high)
-
     def take_damage(self, damage):
         self.hp -= damage
 
@@ -40,6 +33,11 @@ class Person:
             self.hp = 0
 
         return self.hp
+
+    def heal(self, damage):
+        self.hp += damage
+        if self.hp > self.max_hp:
+            self.hp = self.max_hp
 
     def get_hp(self):
         return self.hp
@@ -56,12 +54,6 @@ class Person:
     def reduce_mp(self, cost):
         self.mp -= cost
 
-    def get_spell_name(self,index):
-        return self.magic[index]["name"]
-
-    def get_spell_mp_cost(self, index):
-        return self.magic[index]["cost"]
-
     def choose_action(self):
         index = 1
 
@@ -77,5 +69,5 @@ class Person:
         print(f"{Bcolors.OKBLUE}{Bcolors.BOLD}Magic{Bcolors.ENDC}")
 
         for spell in self.magic:
-            print(f"{index}: {spell['name']} (cost: {spell['cost']})")
+            print(f"{index}: {spell.name} (cost: {spell.cost})")
             index += 1
