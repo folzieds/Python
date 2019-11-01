@@ -1,14 +1,15 @@
 import random
 
+# Adding Color to text 
 class Bcolors:
-    HEADERS="\033[95n"
-    OKBLUE="\033[94n"
-    OKGREEN="\033[92n"
-    WARNING="\033[93n"
-    FAIL="\033[91n"
-    ENDC="\033[0n"
-    BOLD="\033[1n"
-    UNDERLINE="\033[4n"
+    HEADERS="\033[95m"
+    OKBLUE="\033[94m"
+    OKGREEN="\033[92m"
+    WARNING="\033[93m"
+    FAIL="\033[91m"
+    ENDC="\033[0m"
+    BOLD="\033[1m"
+    UNDERLINE="\033[4m"
 
 class Person:
     def __init__(self, hp, mp, df, attack, magic):
@@ -64,7 +65,7 @@ class Person:
     def choose_action(self):
         index = 1
 
-        print("Actions")
+        print(f"{Bcolors.OKBLUE}{Bcolors.BOLD}Actions{Bcolors.ENDC}")
 
         for item in self.action:
             print(f"{index}: {item}")
@@ -73,7 +74,8 @@ class Person:
     def choose_magic(self):
         index = 1
 
-        print("Magic")
+        print(f"{Bcolors.OKBLUE}{Bcolors.BOLD}Magic{Bcolors.ENDC}")
 
         for spell in self.magic:
-            print(f"{index}: {spell['name']} cost: {spell['cost']}")
+            print(f"{index}: {spell['name']} (cost: {spell['cost']})")
+            index += 1
