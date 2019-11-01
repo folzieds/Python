@@ -52,9 +52,14 @@ while running:
         else:
             player.reduce_mp(spell.cost)
 
-            # Generates the damage and saves it in a variable
-            player_magic_damage = spell.generate_damage()
-            enemy.take_damage(player_magic_damage)
+            if spell.type == "white":
+                player.heal(spell.damage)
+                print(f"\n{Bcolors.OKBLUE}{spell.name} heals for {spell.damage} HP.{Bcolors.ENDC}")
+
+            elif spell.type == "black":
+                # Generates the damage and saves it in a variable
+                player_magic_damage = spell.generate_damage()
+                enemy.take_damage(player_magic_damage)
 
         print(f"{Bcolors.OKBLUE}{Bcolors.BOLD}{spell.name}  deals {player_magic_damage} points.{Bcolors.ENDC}")
 
