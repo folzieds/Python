@@ -18,7 +18,6 @@ run = True
 def calculate():
     global previous
     global run
-    equation = ''
 
     if previous == 0:
         equation = input("Enter equation: ")
