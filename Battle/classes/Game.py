@@ -12,7 +12,7 @@ class Bcolors:
     UNDERLINE="\033[4m"
 
 class Person:
-    def __init__(self, hp, mp, df, attack, magic):
+    def __init__(self, hp, mp, df, attack, magic, items):
         self.max_hp = hp
         self.hp = hp
         self.max_mp = mp
@@ -21,7 +21,8 @@ class Person:
         self.high_attack = attack + 10
         self.low_attack = attack - 10
         self.magic = magic
-        self.action = ["Attack", "Magic"]
+        self.items = items
+        self.action = ["Attack", "Magic","Items"]
 
     def generate_damage(self):
         return random.randrange(self.low_attack, self.high_attack)
@@ -57,17 +58,27 @@ class Person:
     def choose_action(self):
         index = 1
 
-        print(f"{Bcolors.OKBLUE}{Bcolors.BOLD}Actions{Bcolors.ENDC}")
+        print(f"{Bcolors.OKBLUE}{Bcolors.BOLD}ACTIONS{Bcolors.ENDC}")
 
         for item in self.action:
-            print(f"{index}: {item}")
+            print(f"    {index}. {item}")
             index += 1
 
     def choose_magic(self):
         index = 1
 
-        print(f"{Bcolors.OKBLUE}{Bcolors.BOLD}Magic{Bcolors.ENDC}")
+        print(f"{Bcolors.OKBLUE}{Bcolors.BOLD}MAGIC{Bcolors.ENDC}")
 
         for spell in self.magic:
-            print(f"{index}: {spell.name} (cost: {spell.cost})")
+            print(f"    {index}. {spell.name} (cost: {spell.cost})")
             index += 1
+
+
+    def choose_items(self):
+        index = 1
+
+        print(f"{Bcolors.OKGREEN}{Bcolors.BOLD}ITEMS{Bcolors.ENDC}")
+
+        for item in self.items:
+            print(f"    {index}. {item.name} cost: {item.prop} qty: x5")
+            index +=1
