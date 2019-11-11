@@ -80,5 +80,5 @@ class Person:
         print(f"{Bcolors.OKGREEN}{Bcolors.BOLD}ITEMS{Bcolors.ENDC}")
 
         for item in self.items:
-            print(f"    {index}. {item.name} cost: {item.prop} qty: x5")
+            print(f"    {index}. {item['item'].name} => cost: {item['item'].prop}, quantity: {item['quantity']}")
             index +=1

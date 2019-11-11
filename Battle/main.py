@@ -25,7 +25,8 @@ High_elixir = Item("Mega Elixir","elixir","Fully restores Hp/Mp of party", 9999)
 grenade = Item("Grenade","attack", "Deals 500 damage", 500)
 
 player_magic = [fire, thunder, blizzard, meteor, cure, cura]
-player_item = [portion, high_portion,super_portion,elixir,High_elixir,grenade]
+player_item = [{"item":portion,"quantity": 15}, {"item":high_portion,"quantity": 15},{"item":super_portion,"quantity": 5},
+               {"item":elixir,"quantity": 5},{"item":High_elixir,"quantity": 2},{"item":grenade,"quantity": 5}]
 
 # Instantiate Characters
 player = Person(500,65,34,60,player_magic,player_item)
@@ -60,6 +61,9 @@ while running:
 
         current_mp = player.get_mp()
 
+        if magic_choice == -1:
+            continue
+
         # skip reduction of mp if the player's mp is below the cost
         if spell.cost > current_mp:
             print(f"{Bcolors.BOLD}{Bcolors.FAIL}\nNOT ENOUGH MP!!{Bcolors.ENDC}")
@@ -84,6 +88,27 @@ while running:
         player.choose_items()
 
         item_choice = int(input("Choose item: ")) - 1
+
+        if item_choice == -1:
+            continue
+
+        item_chosen = player.items[item_choice]
+
+        if item_chosen.item_type == "portion":
+            player.heal(item_chosen.prop)
+
+            print(f"\n{Bcolors.OKGREEN}{Bcolors.BOLD}{item_chosen.name} heals for {item_chosen.prop} HP{Bcolors.ENDC}")
+
+        elif item_chosen.item_type == "elixir":
+            player.hp = player.max_hp
+            player.mp = player.max_mp
+
+            print(f"\n{Bcolors.OKBLUE}{item_chosen.name} fully restores HP/MP{Bcolors.ENDC}")
+
+        elif item_chosen.item_type == "attack":
+            enemy.take_damage(item_chosen.prop)
+            print(f"{Bcolors.FAIL}{item_chosen.name} deals {item_chosen.prop} points of damage{Bcolors.ENDC}")
+
 
     # Enemy attacks you
     enemy_choice = 1
