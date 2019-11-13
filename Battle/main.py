@@ -40,74 +40,87 @@ while running:
     print("========================")
     player.choose_action()
 
-    choice = int(input("Choose action: ")) - 1
-    
-    # Attack option
-    if choice == 0:
-        player_attack_damage = player.generate_damage()
-        enemy.take_damage(player_attack_damage)
+    try:
 
-        print(f"You attacked for {player_attack_damage} points.")
+        choice = int(input("Choose action: ")) - 1
 
-    # Magic option
-    elif choice == 1:
-        print("=========================")
-        player.choose_magic()
-        
-        magic_choice = int(input("Choose magic: ")) - 1
+        # Attack option
+        if choice == 0:
+            player_attack_damage = player.generate_damage()
+            enemy.take_damage(player_attack_damage)
 
-        #create a variable to store the choice of the magic selected
-        spell = player.magic[magic_choice]
+            print(f"You attacked for {player_attack_damage} points.")
 
-        current_mp = player.get_mp()
+        # Magic option
+        elif choice == 1:
+            print("=========================")
+            player.choose_magic()
 
-        if magic_choice == -1:
-            continue
+            magic_choice = int(input("Choose magic: ")) - 1
 
-        # skip reduction of mp if the player's mp is below the cost
-        if spell.cost > current_mp:
-            print(f"{Bcolors.BOLD}{Bcolors.FAIL}\nNOT ENOUGH MP!!{Bcolors.ENDC}")
-            continue
-        else:
-            player.reduce_mp(spell.cost)
+            #create a variable to store the choice of the magic selected
+            spell = player.magic[magic_choice]
 
-            if spell.type == "white":
-                player.heal(spell.damage)
-                print(f"\n{Bcolors.OKBLUE}{spell.name} heals for {spell.damage} HP.{Bcolors.ENDC}")
+            current_mp = player.get_mp()
 
-            elif spell.type == "black":
-                # Generates the damage and saves it in a variable
-                player_magic_damage = spell.generate_damage()
-                enemy.take_damage(player_magic_damage)
+            if magic_choice == -1:
+                continue
 
-        print(f"{Bcolors.OKBLUE}{Bcolors.BOLD}{spell.name}  deals {player_magic_damage} points.{Bcolors.ENDC}")
+            # skip reduction of mp if the player's mp is below the cost
+            if spell.cost > current_mp:
+                print(f"{Bcolors.BOLD}{Bcolors.FAIL}\nNOT ENOUGH MP!!{Bcolors.ENDC}")
+                continue
+            else:
+                player.reduce_mp(spell.cost)
 
-    # Item option
-    elif choice == 2:
-        print("===============================")
-        player.choose_items()
+                if spell.spell_type == "white":
+                    player.heal(spell.damage)
+                    print(f"\n{Bcolors.OKBLUE}{spell.name} heals for {spell.damage} HP.{Bcolors.ENDC}")
 
-        item_choice = int(input("Choose item: ")) - 1
+                elif spell.spell_type == "black":
+                    # Generates the damage and saves it in a variable
+                    player_magic_damage = spell.generate_damage()
+                    enemy.take_damage(player_magic_damage)
 
-        if item_choice == -1:
-            continue
+            print(f"{Bcolors.OKBLUE}{Bcolors.BOLD}{spell.name}  deals {player_magic_damage} points.{Bcolors.ENDC}")
 
-        item_chosen = player.items[item_choice]
+        # Item option
+        elif choice == 2:
+            print("===============================")
+            player.choose_items()
 
-        if item_chosen.item_type == "portion":
-            player.heal(item_chosen.prop)
+            item_choice = int(input("Choose item: ")) - 1
 
-            print(f"\n{Bcolors.OKGREEN}{Bcolors.BOLD}{item_chosen.name} heals for {item_chosen.prop} HP{Bcolors.ENDC}")
+            if item_choice == -1:
+                continue
 
-        elif item_chosen.item_type == "elixir":
-            player.hp = player.max_hp
-            player.mp = player.max_mp
+            item_chosen = player.items[item_choice]["item"]
 
-            print(f"\n{Bcolors.OKBLUE}{item_chosen.name} fully restores HP/MP{Bcolors.ENDC}")
+            if player.items[item_choice]["quantity"] == 0:
+                print(f"{Bcolors.FAIL}\nNone left...{Bcolors.ENDC}")
+                continue
 
-        elif item_chosen.item_type == "attack":
-            enemy.take_damage(item_chosen.prop)
-            print(f"{Bcolors.FAIL}{item_chosen.name} deals {item_chosen.prop} points of damage{Bcolors.ENDC}")
+            player.items[item_choice]["quantity"] -= 1
+
+            if item_chosen.item_type == "portion":
+                player.heal(item_chosen.prop)
+
+                print(f"\n{Bcolors.OKGREEN}{Bcolors.BOLD}{item_chosen.name} heals for {item_chosen.prop} HP{Bcolors.ENDC}")
+
+            elif item_chosen.item_type == "elixir":
+                player.hp = player.max_hp
+                player.mp = player.max_mp
+
+                print(f"\n{Bcolors.OKBLUE}{item_chosen.name} fully restores HP/MP{Bcolors.ENDC}")
+
+            elif item_chosen.item_type == "attack":
+                enemy.take_damage(item_chosen.prop)
+                print(f"{Bcolors.FAIL}{item_chosen.name} deals {item_chosen.prop} points of damage{Bcolors.ENDC}")
+
+    except Exception as error:
+        print(f"{Bcolors.FAIL}{Bcolors.BOLD}\n....INVALID INPUT....{Bcolors.ENDC}")
+        print(f"{error}")
+        continue
 
 
     # Enemy attacks you
