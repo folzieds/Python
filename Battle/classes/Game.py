@@ -12,7 +12,7 @@ class Bcolors:
     UNDERLINE="\033[4m"
 
 class Person:
-    def __init__(self, hp, mp, df, attack, magic, items):
+    def __init__(self, name,hp, mp, df, attack, magic, items):
         self.max_hp = hp
         self.hp = hp
         self.max_mp = mp
@@ -23,6 +23,7 @@ class Person:
         self.magic = magic
         self.items = items
         self.action = ["Attack", "Magic","Items"]
+        self.name=name
 
     def generate_damage(self):
         return random.randrange(self.low_attack, self.high_attack)
@@ -58,6 +59,7 @@ class Person:
     def choose_action(self):
         index = 1
 
+        print(f"{Bcolors.OKGREEN}{Bcolors.BOLD}{self.name.upper()}{Bcolors.ENDC}")
         print(f"{Bcolors.OKBLUE}{Bcolors.BOLD}ACTIONS{Bcolors.ENDC}")
 
         for item in self.action:
@@ -82,3 +84,7 @@ class Person:
         for item in self.items:
             print(f"    {index}. {item['item'].name} => cost: {item['item'].prop}, quantity: {item['quantity']}")
             index +=1
+
+    def get_stats(self):
+        print("               _________________________          __________")
+        print(f"{self.name.upper()}:   {self.hp}/{self.max_hp}|{Bcolors.OKGREEN}█████████████████████████{Bcolors.ENDC}|  {self.mp}/{self.max_mp} |{Bcolors.OKBLUE}██████████{Bcolors.ENDC}|")
