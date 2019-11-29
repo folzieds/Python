@@ -5,6 +5,7 @@ class Bcolors:
     HEADERS="\033[95m"
     OKBLUE="\033[94m"
     OKGREEN="\033[92m"
+    OKYELLOW = "\033[93m"
     WARNING="\033[93m"
     FAIL="\033[91m"
     ENDC="\033[0m"
@@ -66,6 +67,18 @@ class Person:
             print(f"    {index}. {item}")
             index += 1
 
+    def choose_target(self, enemies):
+        index  = 1
+
+        print(f"{Bcolors.FAIL}{Bcolors.BOLD}TARGET{Bcolors.ENDC}")
+
+        for i  in enemies:
+            print(f"    {index}. {i.name}")
+            index += 1
+
+        return int(input("Choose Target: ")) - 1
+
+
     def choose_magic(self):
         index = 1
 
@@ -85,6 +98,55 @@ class Person:
             print(f"    {index}. {item['item'].name} => cost: {item['item'].prop}, quantity: {item['quantity']}")
             index +=1
 
+    def get_enemy_stats(self):
+        hp_bar =""
+        bar = "█"
+
+        LENGTH_OF_HP_BAR = 50
+        BAR_COLOR = Bcolors.FAIL
+
+        hp_status = int(round((self.hp / self.max_hp) * LENGTH_OF_HP_BAR))
+
+        while hp_status > 0:
+            hp_bar += bar
+            hp_status -=1
+        while len(hp_bar) < LENGTH_OF_HP_BAR:
+            hp_bar += " "
+
+        if self.hp < (self.max_hp / 4):
+            BAR_COLOR = Bcolors.OKYELLOW
+
+        print("                 __________________________________________________")
+        print(f"{self.name.upper()}:   {self.hp:4}/{self.max_hp:4}|{BAR_COLOR}{hp_bar}{Bcolors.ENDC}|")
+
     def get_stats(self):
+        hp_bar =""
+        mp_bar = ""
+        bar = "█"
+
+        LENGTH_OF_HP_BAR = 25
+        LENGTH_OF_MP_BAR = 10
+        BAR_COLOR = Bcolors.OKGREEN
+
+        hp_status = int(round((self.hp/self.max_hp) * LENGTH_OF_HP_BAR))
+        mp_status = int(round((self.mp/self.max_mp) * LENGTH_OF_MP_BAR))
+
+        while hp_status > 0:
+            hp_bar += bar
+            hp_status -=1
+        while len(hp_bar) < LENGTH_OF_HP_BAR:
+            hp_bar += " "
+
+        while mp_status > 0:
+            mp_bar += bar
+            mp_status -=1
+
+        while len(mp_bar) < LENGTH_OF_MP_BAR:
+            mp_bar += " "
+
+        if self.hp < (self.max_hp / 4):
+            BAR_COLOR = Bcolors.FAIL
+
+
         print("               _________________________          __________")
-        print(f"{self.name.upper()}:   {self.hp}/{self.max_hp}|{Bcolors.OKGREEN}█████████████████████████{Bcolors.ENDC}|  {self.mp}/{self.max_mp} |{Bcolors.OKBLUE}██████████{Bcolors.ENDC}|")
+        print(f"{self.name.upper()}:   {self.hp:3}/{self.max_hp:3}|{BAR_COLOR}{hp_bar}{Bcolors.ENDC}|  {self.mp:2}/{self.max_mp:2} |{Bcolors.OKBLUE}{mp_bar}{Bcolors.ENDC}|")
