@@ -13,7 +13,7 @@ class Bcolors:
     UNDERLINE="\033[4m"
 
 class Person:
-    def __init__(self, name,hp, mp, df, attack, magic, items):
+    def __init__(self, name,hp, mp, df, attack, magic, items,character):
         self.max_hp = hp
         self.hp = hp
         self.max_mp = mp
@@ -25,6 +25,7 @@ class Person:
         self.items = items
         self.action = ["Attack", "Magic","Items"]
         self.name=name
+        self.character=character
 
     def generate_damage(self):
         return random.randrange(self.low_attack, self.high_attack)
@@ -150,3 +151,112 @@ class Person:
 
         print("               _________________________          __________")
         print(f"{self.name.upper()}:   {self.hp:3}/{self.max_hp:3}|{BAR_COLOR}{hp_bar}{Bcolors.ENDC}|  {self.mp:2}/{self.max_mp:2} |{Bcolors.OKBLUE}{mp_bar}{Bcolors.ENDC}|")
+
+    def attack(self, enemies):
+
+        #generates damage for the player
+        player_attack_damage = self.generate_damage()
+
+        if self.character == "player":
+            target = self.choose_target(enemies)
+        elif self.character == "enemy":
+            target = random.randrange(0, len(enemies))
+
+        enemies[target].take_damage(player_attack_damage)
+
+        print(f"{Bcolors.OKYELLOW}{self.name} attacked {enemies[target].name} for {player_attack_damage} points.{Bcolors.ENDC}")
+
+        if enemies[target].get_hp() == 0:
+            print(f"{enemies[target].name} has died")
+            del enemies[target]
+
+    def magic_attack(self, enemies):
+
+        magic_choice = 0
+        if self.character == "player":
+            self.choose_magic()
+            magic_choice = int(input("Choose magic: ")) - 1
+        elif self.character == "enemy":
+            magic_choice = random.randrange(0,len(self.magic))
+
+        # create a variable to store the choice of the magic selected
+        spell = self.magic[magic_choice]
+
+        current_mp = self.get_mp()
+
+        if magic_choice == -1:
+            pass
+
+        # skip reduction of mp if the player's mp is below the cost
+        if spell.cost > current_mp:
+            print(f"{Bcolors.BOLD}{Bcolors.FAIL}\nNOT ENOUGH MP!!{Bcolors.ENDC}")
+            return
+        else:
+            self.reduce_mp(spell.cost)
+
+            if spell.spell_type == "white":
+                self.heal(spell.damage)
+                print(f"\n{Bcolors.OKBLUE}{spell.name} heals for {spell.damage} HP.{Bcolors.ENDC}")
+
+            elif spell.spell_type == "black":
+                # Generates the damage and saves it in a variable
+                player_magic_damage = spell.generate_damage()
+
+                enemy = self.choose_target(enemies)
+                enemies[enemy].take_damage(player_magic_damage)
+
+                print(
+                    f"{Bcolors.OKBLUE}{Bcolors.BOLD}{spell.name}  deals {player_magic_damage} points to {enemies[enemy].name}.{Bcolors.ENDC}")
+
+                if enemies[enemy].get_hp() == 0:
+                    print(f"{enemies[enemy].name} has died")
+                    del enemies[enemy]
+
+    def use_item(self, enemies, players):
+
+        item_choice = 0
+        if self.character == "player":
+            self.choose_items()
+
+            item_choice = int(input("Choose item: ")) - 1
+
+        elif self.character == "enemy":
+            item_choice = random.randrange(0, len(self.items))
+
+        if item_choice == -1:
+            pass
+
+        item_chosen = self.items[item_choice]["item"]
+
+        if self.items[item_choice]["quantity"] == 0:
+            print(f"{Bcolors.FAIL}\nNone left...{Bcolors.ENDC}")
+            pass
+
+        self.items[item_choice]["quantity"] -= 1
+
+        if item_chosen.item_type == "portion":
+            self.heal(item_chosen.prop)
+
+            print(f"\n{Bcolors.OKGREEN}{Bcolors.BOLD}{item_chosen.name} heals for {item_chosen.prop} HP{Bcolors.ENDC}")
+
+        elif item_chosen.item_type == "elixir":
+            if item_chosen.name == "Mega Elixir":
+                for i in players:
+                    i.hp = i.max_hp
+                    i.mp = i.max_mp
+            else:
+                self.hp = self.max_hp
+                self.mp = self.max_mp
+
+            print(f"\n{Bcolors.OKBLUE}{item_chosen.name} fully restores HP/MP{Bcolors.ENDC}")
+
+        elif item_chosen.item_type == "attack":
+            enemy = self.choose_target(enemies)
+            enemies[enemy].take_damage(item_chosen.prop)
+
+            print(
+                f"{Bcolors.FAIL}{item_chosen.name} deals {item_chosen.prop} points of damage to {enemies[enemy].name}{Bcolors.ENDC}")
+
+            if enemies[enemy].get_hp() == 0:
+                print(f"{enemies[enemy].name} has died")
+                del enemies[enemy]
