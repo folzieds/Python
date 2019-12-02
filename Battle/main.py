@@ -168,31 +168,31 @@ while running:
             print(f"{error}")
             continue
 
-
-    # Enemy attacks you
-    enemy_choice = 1
-
-    if len(enemies) != 0:
-        enemy_attack_damage = enemies[0].generate_damage()
-        target = random.randrange(0,len(players))
-        players[target].take_damage(enemy_attack_damage)
-        print(f"{Bcolors.OKYELLOW}Enemy attacks {players[target].name} for {enemy_attack_damage} points.{Bcolors.ENDC}")
-
-    if players[target].get_hp() == 0:
-        print(f"{players[target].name} has died")
-        del players[target]
-
-    # Print the summary of the attacks for that round
-    print("\n--------------------------------")
-
+    #check if player has won
     if len(enemies) == 0:
         print(f"{Bcolors.BOLD}{Bcolors.OKGREEN}YOU WIN!!!{Bcolors.ENDC}")
         running = False
 
+    # Enemy attack phase
+    for enemy in enemies:
+        enemy_choice = random.randrange(0,3)
 
+        if len(enemies) != 0:
+            enemy_attack_damage = enemies[0].generate_damage()
+            target = random.randrange(0,len(players))
+            players[target].take_damage(enemy_attack_damage)
+            print(f"{Bcolors.OKYELLOW}Enemy attacks {players[target].name} for {enemy_attack_damage} points.{Bcolors.ENDC}")
+
+        if players[target].get_hp() == 0:
+            print(f"{players[target].name} has died")
+            del players[target]
+
+    #  Check if enemy has won
     if len(players) == 0:
         print(f"{Bcolors.BOLD}{Bcolors.FAIL}Your enemy has defeated you. YOU LOST!!!{Bcolors.ENDC}")
         running = False
 
-#todo: when you go back up one level it should actualy go back up one level and not skip to the next person
+
+
+#todo: when you go back up one level it should actually go back up one level and not skip to the next person
 #todo: handle when the user enters a wrong input
