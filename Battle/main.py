@@ -2,6 +2,7 @@ from classes.Game import Person, Bcolors
 from classes.Magic import Spell
 from classes.Inventory import Item
 import random
+import simplejson
 
 # Black Magic
 fire = Spell("Fire", 5, 100, "black")
